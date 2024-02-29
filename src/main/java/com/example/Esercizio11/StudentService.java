@@ -8,14 +8,12 @@ import java.util.Optional;
 @Service
 public class StudentService {
     @Autowired
-    private StudentRepository studentRepository;
-
-    public StudentEntity setStudentWorking(Long studentId, boolean isWorking){
+    StudentRepository studentRepository;
+    public StudentEntity setStudentIsWorking(Long studentId, Boolean working) {
         Optional<StudentEntity> student = studentRepository.findById(studentId);
-
-        if(!student.isPresent()) return null;
-        student.get().setWorking(isWorking);
-        studentRepository.save(student.get());
-        return null;
+        if (student.isPresent()) {
+            student.get().setWorking(working);
+            return studentRepository.saveAndFlush(student.get());
+        } else return null;
     }
 }

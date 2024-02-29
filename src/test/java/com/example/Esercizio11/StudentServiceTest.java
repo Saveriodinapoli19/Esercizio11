@@ -6,21 +6,29 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest
 @ActiveProfiles(value = "test")
 public class StudentServiceTest {
     @Autowired
-    private StudentService studentService;
+    StudentService studentService;
     @Autowired
-    private StudentRepository studentRepository;
+    StudentRepository studentRepository;
     @Test
-    void checkStudentWorking() throws Exception{
+    void studentIsWorking() throws Exception{
         StudentEntity studentEntity = new StudentEntity();
+        studentEntity.setId(1L);
+        studentEntity.setName("Michele");
+        studentEntity.setSurname("Bianco");
         studentEntity.setWorking(true);
-        studentEntity.setName("Mario");
-        studentEntity.setSurname("Rossi");
-        assertThat(studentEntity.getName()).isNotNull();
-        assertThat(studentEntity.getSurname()).isNotNull();
-        assertThat(studentEntity.isWorking()).isTrue();
+
+        StudentEntity studentFromDB = studentRepository.save(studentEntity);
+        assertThat(studentFromDB).isNotNull();
+        assertThat(studentFromDB.getId()).isNotNull();
+
+        StudentEntity studentFromService = studentService.setStudentIsWorking(studentFromDB.getId(), false);
+        assertThat(studentFromService).isNotNull();
+        assertThat(studentFromService.getId()).isNotNull();
+
     }
 }
