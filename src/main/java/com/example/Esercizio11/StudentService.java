@@ -9,6 +9,7 @@ import java.util.Optional;
 public class StudentService {
     @Autowired
     StudentRepository studentRepository;
+
     public StudentEntity setStudentIsWorking(Long studentId, Boolean working) {
         Optional<StudentEntity> student = studentRepository.findById(studentId);
         if (student.isPresent()) {

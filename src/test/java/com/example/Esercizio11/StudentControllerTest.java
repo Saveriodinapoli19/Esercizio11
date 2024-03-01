@@ -26,11 +26,13 @@ public class StudentControllerTest {
     private MockMvc mockMvc;
     @Autowired
     ObjectMapper objectMapper;
+
     @Test
     void testController() {
         assertThat(studentController).isNotNull();
     }
-    private StudentEntity createStudent() throws Exception{
+
+    private StudentEntity createStudent() throws Exception {
         StudentEntity studentEntity = new StudentEntity();
         studentEntity.setId(1L);
         studentEntity.setName("Mario");
@@ -40,39 +42,43 @@ public class StudentControllerTest {
         String studentJSon = objectMapper.writeValueAsString(studentEntity);
 
         MvcResult result = this.mockMvc.perform(post("/api/create")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(studentJSon))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(studentJSon))
                 .andExpect(status().isOk())
                 .andReturn();
         String studentJSon1 = result.getResponse().getContentAsString();
         return objectMapper.readValue(studentJSon1, StudentEntity.class);
     }
-    private StudentEntity getStudentFromId(Long id) throws Exception{
+
+    private StudentEntity getStudentFromId(Long id) throws Exception {
         MvcResult result = this.mockMvc.perform(get("/api/student/" + id))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
-        try{
+        try {
             String studentJSon = result.getResponse().getContentAsString();
             return objectMapper.readValue(studentJSon, StudentEntity.class);
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
+
     @Test
-    void createStudentTest() throws Exception{
+    void createStudentTest() throws Exception {
         StudentEntity studentEntity = createStudent();
         assertThat(studentEntity.getId()).isNotNull();
     }
+
     @Test
-    void getStudentByIdTest() throws Exception{
+    void getStudentByIdTest() throws Exception {
         StudentEntity studentEntity = createStudent();
         assertThat(studentEntity.getId()).isNotNull();
         StudentEntity studentResponse = getStudentFromId(studentEntity.getId());
         assertThat(studentResponse.getId()).isEqualTo(studentEntity.getId());
     }
+
     @Test
-    void deleteStudentTest() throws Exception{
+    void deleteStudentTest() throws Exception {
         StudentEntity studentEntity = createStudent();
         assertThat(studentEntity.getId()).isNotNull();
 
@@ -86,11 +92,11 @@ public class StudentControllerTest {
     }
 
     @Test
-    void updateStudentStatusTest() throws Exception{
+    void updateStudentStatusTest() throws Exception {
         StudentEntity studentEntity = createStudent();
         assertThat(studentEntity.getId()).isNotNull();
 
-        MvcResult result = this.mockMvc.perform(put("/api/isworking/" + studentEntity.getId() + "?working=false" ))
+        MvcResult result = this.mockMvc.perform(put("/api/isworking/" + studentEntity.getId() + "?working=false"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();

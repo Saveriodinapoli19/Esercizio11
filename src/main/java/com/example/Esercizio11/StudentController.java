@@ -13,34 +13,40 @@ public class StudentController {
     StudentRepository studentRepository;
     @Autowired
     StudentService studentService;
+
     @PostMapping("/create")
-    public @ResponseBody StudentEntity createStudent(@RequestBody StudentEntity studentEntity){
+    public @ResponseBody StudentEntity createStudent(@RequestBody StudentEntity studentEntity) {
         studentRepository.save(studentEntity);
         return studentEntity;
     }
+
     @GetMapping("/listStudent")
-    public List<StudentEntity> studentList(){
-        return studentRepository.findAll() ;
+    public List<StudentEntity> studentList() {
+        return studentRepository.findAll();
     }
+
     @GetMapping("/student/{id}")
-    public Optional<StudentEntity> studentByID(@PathVariable Long id){
+    public Optional<StudentEntity> studentByID(@PathVariable Long id) {
         return studentRepository.findById(id);
     }
+
     @PutMapping("/update/{id}")
-    public StudentEntity updateStudent(@PathVariable Long id, @RequestBody StudentEntity students){
+    public StudentEntity updateStudent(@PathVariable Long id, @RequestBody StudentEntity students) {
         StudentEntity studentEntity = studentRepository.findById(id).orElse(null);
-        if(studentEntity != null){
-            students.setId(id);
-            return  studentRepository.save(students);
+        if (studentEntity != null) {
+            studentEntity.setId(students.getId());
+            return studentRepository.save(studentEntity);
         }
         return null;
     }
+
     @PutMapping("/isworking/{id}")
-    public @ResponseBody StudentEntity updateStatus(@PathVariable Long id, @RequestParam boolean working){
-        return studentService.setStudentIsWorking(id,working);
+    public @ResponseBody StudentEntity updateStatus(@PathVariable Long id, @RequestParam boolean working) {
+        return studentService.setStudentIsWorking(id, working);
     }
+
     @DeleteMapping("/delete/{id}")
-    public @ResponseBody void deleteStudent(@PathVariable Long id){
+    public @ResponseBody void deleteStudent(@PathVariable Long id) {
         studentRepository.deleteById(id);
     }
 }
